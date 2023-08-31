@@ -12,12 +12,12 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { User, UserDocument } from 'src/user/user.model';
+import { User, UserDocument } from '../user/user.model';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
-import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
+import { RefreshTokenGuard } from '../common/guards/refreshToken.guard';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -57,22 +57,21 @@ export class AuthController {
   async loginUser(
     @Body() loginUserDto: LoginUserDto,
   ): Promise<{ access_token: string }> {
+    const { email, password: loginPassword } = loginUserDto;
+    let existingUser: UserDocument;
+    let isValid: boolean;
+
     try {
-      const { email, password: loginPassword } = loginUserDto;
-      let existingUser: UserDocument;
-      let isValid: boolean;
+      existingUser = await this.userService.getUser({ email });
+      isValid = await bcrypt.compare(loginPassword, existingUser.password);
+    } catch (error) {
+      throw new ForbiddenException('Username or password is invalid');
+    }
 
-      try {
-        existingUser = await this.userService.getUser({ email });
-        isValid = await bcrypt.compare(loginPassword, existingUser.password);
-      } catch (error) {
-        throw new ForbiddenException('Username or password is invalid');
-      }
-
-      if (!isValid) {
-        throw new ForbiddenException('Username or password is invalid');
-      }
-
+    if (!isValid) {
+      throw new ForbiddenException('Username or password is invalid');
+    }
+    try {
       const tokens = await this.authService.login(existingUser);
       await this.authService.updateRefreshToken(
         existingUser.id,

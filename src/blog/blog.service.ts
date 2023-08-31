@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BlogDto } from './dto/blog.dto';
 import { Blog, BlogDocument } from './blog.model';
-import { modelsName } from 'src/common/constants/modelsName';
+import { modelsName } from '../common/constants/modelsName';
 
 @Injectable()
 export class BlogService {

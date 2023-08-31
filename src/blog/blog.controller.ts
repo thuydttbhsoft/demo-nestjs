@@ -19,7 +19,7 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get('')
-  async createUser(): Promise<Blog[]> {
+  async getAllBlog(): Promise<Blog[]> {
     try {
       const result = await this.blogService.getAllBlogs();
       return result;
@@ -47,12 +47,14 @@ export class BlogController {
     @Param('id') id: string,
     @Body() blogDto: BlogDto,
   ): Promise<Blog> {
+    // Check if Blog already exists
+    const existingBlog = await this.blogService.getBlog({
+      _id: id,
+    });
+    if (!existingBlog) {
+      throw new NotFoundException('Blog not found.');
+    }
     try {
-      // Check if Blog already exists
-      const existingBlog = await this.blogService.getBlog({
-        _id: id,
-      });
-      if (!existingBlog) throw new NotFoundException('Blog not found.');
       const blog = await this.blogService.updateBlog(id, blogDto);
 
       return blog;
@@ -65,12 +67,12 @@ export class BlogController {
   async deleteBlog(
     @Param('id') id: string,
   ): Promise<{ status: string; message: string }> {
+    // Check if Blog already exists
+    const existingBlog = await this.blogService.getBlog({
+      _id: id,
+    });
+    if (!existingBlog) throw new NotFoundException('Blog not found.');
     try {
-      // Check if Blog already exists
-      const existingBlog = await this.blogService.getBlog({
-        _id: id,
-      });
-      if (!existingBlog) throw new NotFoundException('Blog not found.');
       await this.blogService.deleteBlog(id);
 
       return {
