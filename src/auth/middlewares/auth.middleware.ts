@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../../user/user.service';
 
 /** The AuthMiddleware is used to
  * (1) read the request header bearer token/user access token

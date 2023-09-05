@@ -3,7 +3,7 @@ import { BlogController } from './blog.controller';
 import { BlogService } from './blog.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BlogSchema } from './blog.model';
-import { modelsName } from 'src/common/constants/modelsName';
+import { modelsName } from '../common/constants/modelsName';
 // import { UserSchema } from 'src/user/user.model';
 @Module({
   imports: [

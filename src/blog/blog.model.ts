@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { User } from 'src/user/user.model';
+import { User } from '../user/user.model';
 import { Type } from 'class-transformer';
-import { modelsName } from 'src/common/constants/modelsName';
+import { modelsName } from '../common/constants/modelsName';
 export type BlogDocument = Blog & Document;
 
 @Schema({ timestamps: true })

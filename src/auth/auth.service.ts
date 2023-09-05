@@ -19,7 +19,7 @@ export class AuthService {
     const user = await this.userService.getUser({ email });
     // if (!user) return null;
     if (!user) {
-      throw new NotAcceptableException('could not find the user');
+      throw new NotAcceptableException('Could not find the user');
     }
     const passwordValid = await bcrypt.compare(password, user.password);
 
