@@ -33,6 +33,6 @@ export class UserService {
   }
 
   async getUser(query: object): Promise<UserDocument> {
-    return this.userModel.findOne(query).select('password');
+    return this.userModel.findOne(query).select('email password');
   }
 }
